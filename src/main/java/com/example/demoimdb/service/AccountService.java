@@ -21,7 +21,7 @@ public class AccountService {
             throw new ApiInputException("Tài khoản không có quyền!");
         } else if (!account.getPassword().equals(baseAccountDTO.getPassword())) {
             throw new ApiInputException("Tài khoản không có quyền!");
-        } else if (account.getRole().equals("ADMIN")){
+        } else if (!account.getRole().equals("ADMIN")){
             throw new ApiInputException("Tài khoản không có quyền!");
         }
     }
