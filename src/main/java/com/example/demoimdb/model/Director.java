@@ -17,6 +17,12 @@ public class Director {
     private Long id;
     @Column(name = "name")
     private String name;
+    @Column(name = "description")
+    private String description;
+    @Column(name = "image")
+    private String image;
+    @Column(name = "dob")
+    private String dob;
     @OneToMany(mappedBy = "director")
     private List<MovieDirector> listMovieDirectors;
 }

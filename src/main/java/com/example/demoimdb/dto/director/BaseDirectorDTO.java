@@ -1,6 +1,5 @@
-package com.example.demoimdb.dto.actor;
+package com.example.demoimdb.dto.director;
 
-import com.example.demoimdb.dto.account.BaseAccountDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +12,7 @@ import javax.validation.constraints.Pattern;
 @Getter
 @Setter
 
-public class BaseActorDTO {
+public class BaseDirectorDTO {
     private String name;
     private String description;
     private String image;

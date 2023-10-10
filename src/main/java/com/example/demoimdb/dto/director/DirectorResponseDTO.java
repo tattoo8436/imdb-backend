@@ -1,4 +1,4 @@
-package com.example.demoimdb.dto.actor;
+package com.example.demoimdb.dto.director;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +9,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class ActorResponseDTO extends BaseActorDTO{
+public class DirectorResponseDTO extends BaseDirectorDTO {
     private Long id;
 }

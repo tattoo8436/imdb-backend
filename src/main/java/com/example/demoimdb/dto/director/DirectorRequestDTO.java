@@ -1,11 +1,9 @@
-package com.example.demoimdb.dto.actor;
+package com.example.demoimdb.dto.director;
 
-import com.example.demoimdb.dto.account.BaseAccountDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -14,7 +12,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @Getter
 @Setter
-public class ActorRequestDTO extends BaseActorDTO{
+public class DirectorRequestDTO extends BaseDirectorDTO {
     @NotNull(message = "Tên đăng nhập là bắt buộc!")
     @NotBlank(message = "Tên đăng nhập không được để trống!")
     private String username;
