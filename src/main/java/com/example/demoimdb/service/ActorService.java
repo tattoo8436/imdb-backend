@@ -27,10 +27,6 @@ public class ActorService {
     @Autowired
     private AccountService accountService;
 
-    public List<ActorResponseDTO> getAllActors() {
-        return ConvertUtils.convertList(actorRepository.findAll(), ActorResponseDTO.class);
-    }
-
     public ActorResponseDTO addActor(ActorRequestDTO actorRequestDTO) throws IOException {
         BaseAccountDTO baseAccountDTO = new BaseAccountDTO(actorRequestDTO.getUsername(), actorRequestDTO.getPassword());
         accountService.checkAdmin(baseAccountDTO);

@@ -30,4 +30,6 @@ public class Rating {
     private Long id;
     @Column(name = "score")
     private Integer score;
+    @Column(name = "date")
+    private String date;
 }

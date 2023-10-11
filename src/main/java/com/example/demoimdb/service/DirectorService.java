@@ -26,15 +26,14 @@ public class DirectorService {
     @Autowired
     private AccountService accountService;
 
-    public List<DirectorResponseDTO> getAllDirectors() {
-        return ConvertUtils.convertList(directorRepository.findAll(), DirectorResponseDTO.class);
-    }
-
     public DirectorResponseDTO addDirector(DirectorRequestDTO directorRequestDTO) throws IOException {
         BaseAccountDTO baseAccountDTO = new BaseAccountDTO(directorRequestDTO.getUsername(), directorRequestDTO.getPassword());
         accountService.checkAdmin(baseAccountDTO);
-        Director director = new Director(null, directorRequestDTO.getName(), directorRequestDTO.getDescription(), directorRequestDTO.getImage(),
-                directorRequestDTO.getDob(), null);
+        Director director = new Director();
+        director.setName(directorRequestDTO.getName());
+        director.setDescription(directorRequestDTO.getDescription());
+        director.setImage(directorRequestDTO.getImage());
+        director.setDob(directorRequestDTO.getDob());
         return ConvertUtils.convert(directorRepository.save(director), DirectorResponseDTO.class);
     }
 

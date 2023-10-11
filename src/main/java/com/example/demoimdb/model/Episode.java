@@ -17,6 +17,10 @@ public class Episode {
     @JoinColumn(name = "movie_id")
     @JsonIgnore
     private Movie movie;
+    @ManyToOne
+    @JoinColumn(name = "director_id")
+    @JsonIgnore
+    private Director director;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

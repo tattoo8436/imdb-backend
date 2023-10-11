@@ -24,5 +24,7 @@ public class Director {
     @Column(name = "dob")
     private String dob;
     @OneToMany(mappedBy = "director")
-    private List<MovieDirector> listMovieDirectors;
+    private List<Movie> listMovies;
+    @OneToMany(mappedBy = "director")
+    private List<Episode> listEpisodes;
 }

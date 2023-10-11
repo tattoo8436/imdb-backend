@@ -1,5 +1,6 @@
 package com.example.demoimdb.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -12,6 +13,10 @@ import java.util.List;
 @Getter
 @Setter
 public class Movie {
+    @ManyToOne
+    @JoinColumn(name = "director_id")
+    @JsonIgnore
+    private Director director;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,18 +34,21 @@ public class Movie {
     private String duration;
     @Column(name = "type")
     private String type;
+    @Column(name = "ended")
+    private Boolean ended;
     @Column(name = "number_season")
     private Integer numberSeason;
     @Column(name = "number_vote")
     private Integer numberVote;
     @Column(name = "score")
     private Double score;
+    @Column(name = "language")
+    private String language;
     @OneToMany(mappedBy = "movie")
     private List<MovieGenre> listMovieGenres;
     @OneToMany(mappedBy = "movie")
     private List<MovieActor> listMovieActors;
-    @OneToMany(mappedBy = "movie")
-    private List<MovieDirector> listMovieDirectors;
+
     @OneToMany(mappedBy = "movie")
     private List<Comment> listComments;
     @OneToMany(mappedBy = "movie")
