@@ -1,5 +1,7 @@
 package com.example.demoimdb.controller;
 
+import com.example.demoimdb.dto.movie.ListMoviesResponseDTO;
+import com.example.demoimdb.dto.movie.SearchMovieRequestDTO;
 import com.example.demoimdb.model.Genre;
 import com.example.demoimdb.model.Movie;
 import com.example.demoimdb.service.MovieService;
@@ -18,7 +20,7 @@ public class MovieController {
     @Autowired
     private MovieService movieService;
     @PostMapping("/search")
-    public ResponseEntity<List<Movie>> searchMovie(@RequestBody Genre genre){
-        return ResponseEntity.ok(movieService.searchMovie(genre.getId()));
+    public ResponseEntity<ListMoviesResponseDTO> searchMovie(@RequestBody SearchMovieRequestDTO searchMovieRequestDTO){
+        return ResponseEntity.ok(movieService.searchMovie(searchMovieRequestDTO));
     }
 }

@@ -31,9 +31,9 @@ public class Movie {
     @Column(name = "releaseDate")
     private String releaseDate;
     @Column(name = "duration")
-    private String duration;
+    private Integer duration;
     @Column(name = "type")
-    private String type;
+    private Integer type;
     @Column(name = "ended")
     private Boolean ended;
     @Column(name = "number_season")
