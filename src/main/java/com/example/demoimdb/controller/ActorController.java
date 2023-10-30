@@ -1,6 +1,7 @@
 package com.example.demoimdb.controller;
 
 import com.example.demoimdb.dto.actor.*;
+import com.example.demoimdb.model.Actor;
 import com.example.demoimdb.service.ActorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,17 +22,17 @@ public class ActorController {
     }
 
     @PostMapping("")
-    public ResponseEntity<ActorResponseDTO> addActor(@Valid  @RequestBody ActorRequestDTO actorRequestDTO) throws IOException {
+    public ResponseEntity<Actor> addActor(@Valid  @RequestBody ActorRequestDTO actorRequestDTO) {
         return ResponseEntity.ok(actorService.addActor(actorRequestDTO));
     }
 
     @PutMapping("")
-    public ResponseEntity<ActorResponseDTO> editActor(@Valid  @RequestBody ActorRequestDTO actorRequestDTO) throws IOException {
+    public ResponseEntity<Actor> editActor(@Valid  @RequestBody ActorRequestDTO actorRequestDTO) {
         return ResponseEntity.ok(actorService.editActor(actorRequestDTO));
     }
 
     @DeleteMapping("")
-    public ResponseEntity<String> deleteActor(@Valid  @RequestBody ActorRequestDTO actorRequestDTO) throws IOException {
+    public ResponseEntity<String> deleteActor(@Valid  @RequestBody ActorRequestDTO actorRequestDTO) {
         return ResponseEntity.ok(actorService.deleteActor(actorRequestDTO));
     }
 }

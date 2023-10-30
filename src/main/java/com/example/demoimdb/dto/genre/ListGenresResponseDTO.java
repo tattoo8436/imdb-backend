@@ -1,6 +1,7 @@
 package com.example.demoimdb.dto.genre;
 
 import com.example.demoimdb.dto.GetListByPageDTO;
+import com.example.demoimdb.model.Genre;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-public class ListGenresResponseDTO extends GetListByPageDTO {
+public class ListGenresResponseDTO {
     private Long totalRecords;
-    private List<GenreResponseDTO> listGenres;
+    private List<Genre> listGenres;
 }

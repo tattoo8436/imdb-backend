@@ -17,16 +17,16 @@ public class Episode {
     @JoinColumn(name = "movie_id")
     @JsonIgnore
     private Movie movie;
-    @ManyToOne
-    @JoinColumn(name = "director_id")
-    @JsonIgnore
-    private Director director;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "ep")
+    private Integer ep;
+    @Column(name = "season")
+    private Integer season;
     @Column(name = "name")
     private String name;
-    @Column(name = "description")
+    @Column(name = "description", length = 1000)
     private String description;
     @Column(name = "image")
     private String image;
@@ -38,10 +38,6 @@ public class Episode {
     private Integer numberVote;
     @Column(name = "score")
     private Double score;
-    @OneToMany(mappedBy = "episode")
-    private List<EpisodeGenre> listEpisodeGenres;
-    @OneToMany(mappedBy = "episode")
-    private List<EpisodeActor> listEpisodeActors;
     @OneToMany(mappedBy = "episode")
     private List<Comment> listComments;
     @OneToMany(mappedBy = "episode")

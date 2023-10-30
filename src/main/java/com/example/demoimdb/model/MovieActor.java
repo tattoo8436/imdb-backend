@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.security.auth.Subject;
+import java.util.List;
 
 @Entity
 @Table(name = "movie_actor")
@@ -15,7 +16,6 @@ import javax.security.auth.Subject;
 public class MovieActor {
     @ManyToOne
     @JoinColumn(name = "actor_id")
-    @JsonIgnore
     private Actor actor;
     @ManyToOne
     @JoinColumn(name = "movie_id")
@@ -24,4 +24,6 @@ public class MovieActor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "name_in_movie")
+    private String nameInMovie;
 }

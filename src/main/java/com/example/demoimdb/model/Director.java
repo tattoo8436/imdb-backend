@@ -1,5 +1,6 @@
 package com.example.demoimdb.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -17,14 +18,13 @@ public class Director {
     private Long id;
     @Column(name = "name")
     private String name;
-    @Column(name = "description")
+    @Column(name = "description", length = 1000)
     private String description;
     @Column(name = "image")
     private String image;
     @Column(name = "dob")
     private String dob;
+    @JsonIgnore
     @OneToMany(mappedBy = "director")
-    private List<Movie> listMovies;
-    @OneToMany(mappedBy = "director")
-    private List<Episode> listEpisodes;
+    private List<MovieDirector> listMovieDirectors;
 }

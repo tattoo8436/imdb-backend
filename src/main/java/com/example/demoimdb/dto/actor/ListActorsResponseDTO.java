@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-public class ListActorsResponseDTO extends GetListByPageDTO {
+public class ListActorsResponseDTO {
     private Long totalRecords;
-    private List<ActorResponseDTO> listActors;
+    private List<Actor> listActors;
 }

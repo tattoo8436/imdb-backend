@@ -1,9 +1,9 @@
 package com.example.demoimdb.controller;
 
 import com.example.demoimdb.dto.director.DirectorRequestDTO;
-import com.example.demoimdb.dto.director.DirectorResponseDTO;
 import com.example.demoimdb.dto.director.ListDirectorsResponseDTO;
 import com.example.demoimdb.dto.director.SearchDirectorRequestDTO;
+import com.example.demoimdb.model.Director;
 import com.example.demoimdb.service.DirectorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,17 +24,17 @@ public class DirectorController {
     }
 
     @PostMapping("")
-    public ResponseEntity<DirectorResponseDTO> addDirector(@Valid  @RequestBody DirectorRequestDTO directorRequestDTO) throws IOException {
+    public ResponseEntity<Director> addDirector(@Valid  @RequestBody DirectorRequestDTO directorRequestDTO) {
         return ResponseEntity.ok(directorService.addDirector(directorRequestDTO));
     }
 
     @PutMapping("")
-    public ResponseEntity<DirectorResponseDTO> editDirector(@Valid  @RequestBody DirectorRequestDTO directorRequestDTO) throws IOException {
+    public ResponseEntity<Director> editDirector(@Valid  @RequestBody DirectorRequestDTO directorRequestDTO) {
         return ResponseEntity.ok(directorService.editDirector(directorRequestDTO));
     }
 
     @DeleteMapping("")
-    public ResponseEntity<String> deleteDirector(@Valid  @RequestBody DirectorRequestDTO directorRequestDTO) throws IOException {
+    public ResponseEntity<String> deleteDirector(@Valid  @RequestBody DirectorRequestDTO directorRequestDTO) {
         return ResponseEntity.ok(directorService.deleteDirector(directorRequestDTO));
     }
 }

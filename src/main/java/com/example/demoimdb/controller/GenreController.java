@@ -1,9 +1,9 @@
 package com.example.demoimdb.controller;
 
 import com.example.demoimdb.dto.genre.GenreRequestDTO;
-import com.example.demoimdb.dto.genre.GenreResponseDTO;
 import com.example.demoimdb.dto.genre.ListGenresResponseDTO;
 import com.example.demoimdb.dto.genre.SearchGenreRequestDTO;
+import com.example.demoimdb.model.Genre;
 import com.example.demoimdb.service.GenreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,17 +24,17 @@ public class GenreController {
     }
 
     @PostMapping("")
-    public ResponseEntity<GenreResponseDTO> addGenre(@Valid  @RequestBody GenreRequestDTO genreRequestDTO) throws IOException {
+    public ResponseEntity<Genre> addGenre(@Valid  @RequestBody GenreRequestDTO genreRequestDTO) {
         return ResponseEntity.ok(genreService.addGenre(genreRequestDTO));
     }
 
     @PutMapping("")
-    public ResponseEntity<GenreResponseDTO> editGenre(@Valid  @RequestBody GenreRequestDTO genreRequestDTO) throws IOException {
+    public ResponseEntity<Genre> editGenre(@Valid  @RequestBody GenreRequestDTO genreRequestDTO) {
         return ResponseEntity.ok(genreService.editGenre(genreRequestDTO));
     }
 
     @DeleteMapping("")
-    public ResponseEntity<String> deleteGenre(@Valid  @RequestBody GenreRequestDTO genreRequestDTO) throws IOException {
+    public ResponseEntity<String> deleteGenre(@Valid  @RequestBody GenreRequestDTO genreRequestDTO) {
         return ResponseEntity.ok(genreService.deleteGenre(genreRequestDTO));
     }
 }

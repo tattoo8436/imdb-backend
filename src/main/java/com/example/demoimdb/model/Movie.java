@@ -2,6 +2,7 @@ package com.example.demoimdb.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import java.util.List;
@@ -13,16 +14,12 @@ import java.util.List;
 @Getter
 @Setter
 public class Movie {
-    @ManyToOne
-    @JoinColumn(name = "director_id")
-    @JsonIgnore
-    private Director director;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "name")
     private String name;
-    @Column(name = "description")
+    @Column(name = "description", length = 1000)
     private String description;
     @Column(name = "image")
     private String image;
@@ -48,7 +45,8 @@ public class Movie {
     private List<MovieGenre> listMovieGenres;
     @OneToMany(mappedBy = "movie")
     private List<MovieActor> listMovieActors;
-
+    @OneToMany(mappedBy = "movie")
+    private List<MovieDirector> listMovieDirectors;
     @OneToMany(mappedBy = "movie")
     private List<Comment> listComments;
     @OneToMany(mappedBy = "movie")

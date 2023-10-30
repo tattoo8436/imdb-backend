@@ -1,5 +1,6 @@
 package com.example.demoimdb.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -18,7 +19,6 @@ public class Genre {
     @Column(name = "name")
     private String name;
     @OneToMany(mappedBy = "genre")
+    @JsonIgnore
     private List<MovieGenre> listMovieGenres;
-    @OneToMany(mappedBy = "genre")
-    private List<EpisodeGenre> listEpisodeGenres;
 }

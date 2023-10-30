@@ -15,7 +15,6 @@ import javax.security.auth.Subject;
 public class MovieGenre {
     @ManyToOne
     @JoinColumn(name = "genre_id")
-    @JsonIgnore
     private Genre genre;
     @ManyToOne
     @JoinColumn(name = "movie_id")

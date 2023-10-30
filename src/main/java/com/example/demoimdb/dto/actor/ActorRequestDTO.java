@@ -1,6 +1,8 @@
 package com.example.demoimdb.dto.actor;
 
+import com.example.demoimdb.dto.AccountAdmin;
 import com.example.demoimdb.dto.account.BaseAccountDTO;
+import com.example.demoimdb.model.Actor;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,13 +16,8 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @Getter
 @Setter
-public class ActorRequestDTO extends BaseActorDTO{
-    @NotNull(message = "Tên đăng nhập là bắt buộc!")
-    @NotBlank(message = "Tên đăng nhập không được để trống!")
-    private String username;
-    @NotNull(message = "Mật khẩu là bắt buộc!")
-    @NotBlank(message = "Mật khẩu không được để trống!")
-    private String password;
-    private Long id;
+public class ActorRequestDTO extends Actor {
+    @NotNull(message = "Tài khoản admin là bắt buộc")
+    private AccountAdmin accountAdmin;
 
 }

@@ -2,14 +2,11 @@ package com.example.demoimdb.service;
 
 import com.example.demoimdb.dto.account.BaseAccountDTO;
 import com.example.demoimdb.dto.actor.ActorRequestDTO;
-import com.example.demoimdb.dto.actor.ActorResponseDTO;
 import com.example.demoimdb.dto.actor.ListActorsResponseDTO;
 import com.example.demoimdb.dto.actor.SearchActorRequestDTO;
 import com.example.demoimdb.exception.ApiInputException;
 import com.example.demoimdb.model.Actor;
 import com.example.demoimdb.repository.ActorRepository;
-import com.example.demoimdb.utils.ConvertUtils;
-import com.example.demoimdb.utils.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,7 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -27,16 +23,16 @@ public class ActorService {
     @Autowired
     private AccountService accountService;
 
-    public ActorResponseDTO addActor(ActorRequestDTO actorRequestDTO) throws IOException {
-        BaseAccountDTO baseAccountDTO = new BaseAccountDTO(actorRequestDTO.getUsername(), actorRequestDTO.getPassword());
+    public Actor addActor(ActorRequestDTO actorRequestDTO) {
+        BaseAccountDTO baseAccountDTO = new BaseAccountDTO(actorRequestDTO.getAccountAdmin().getUsername(), actorRequestDTO.getAccountAdmin().getPassword());
         accountService.checkAdmin(baseAccountDTO);
         Actor actor = new Actor(null, actorRequestDTO.getName(), actorRequestDTO.getDescription(), actorRequestDTO.getImage(),
-                actorRequestDTO.getDob(), null, null);
-        return ConvertUtils.convert(actorRepository.save(actor), ActorResponseDTO.class);
+                actorRequestDTO.getDob(), null);
+        return actorRepository.save(actor);
     }
 
-    public ActorResponseDTO editActor(ActorRequestDTO actorRequestDTO) throws IOException {
-        BaseAccountDTO baseAccountDTO = new BaseAccountDTO(actorRequestDTO.getUsername(), actorRequestDTO.getPassword());
+    public Actor editActor(ActorRequestDTO actorRequestDTO) {
+        BaseAccountDTO baseAccountDTO = new BaseAccountDTO(actorRequestDTO.getAccountAdmin().getUsername(), actorRequestDTO.getAccountAdmin().getPassword());
         accountService.checkAdmin(baseAccountDTO);
         try {
             Actor actor = actorRepository.findById(actorRequestDTO.getId()).get();
@@ -44,14 +40,14 @@ public class ActorService {
             actor.setDescription(actorRequestDTO.getDescription());
             actor.setImage(actorRequestDTO.getImage());
             actor.setDob(actorRequestDTO.getDob());
-            return ConvertUtils.convert(actorRepository.save(actor), ActorResponseDTO.class);
+            return actorRepository.save(actor);
         } catch (Exception e) {
-            throw new ApiInputException("ID không hợp lệ!");
+            throw new ApiInputException("Sửa thất bại!");
         }
     }
 
     public String deleteActor(ActorRequestDTO actorRequestDTO) {
-        BaseAccountDTO baseAccountDTO = new BaseAccountDTO(actorRequestDTO.getUsername(), actorRequestDTO.getPassword());
+        BaseAccountDTO baseAccountDTO = new BaseAccountDTO(actorRequestDTO.getAccountAdmin().getUsername(), actorRequestDTO.getAccountAdmin().getPassword());
         accountService.checkAdmin(baseAccountDTO);
         try {
             actorRepository.deleteById(actorRequestDTO.getId());
@@ -62,7 +58,8 @@ public class ActorService {
     }
 
     public ListActorsResponseDTO searchActor(SearchActorRequestDTO searchActorRequestDTO) {
-        BaseAccountDTO baseAccountDTO = new BaseAccountDTO(searchActorRequestDTO.getUsername(), searchActorRequestDTO.getPassword());
+        BaseAccountDTO baseAccountDTO = new BaseAccountDTO(searchActorRequestDTO.getAccountAdmin().getUsername(),
+                searchActorRequestDTO.getAccountAdmin().getPassword());
         accountService.checkAdmin(baseAccountDTO);
         searchActorRequestDTO.validateInput();
         Pageable pageable;
@@ -73,11 +70,9 @@ public class ActorService {
         }
         Page<Actor> pageActors = actorRepository.searchActor(searchActorRequestDTO.getName(), pageable);
         List<Actor> listActors = pageActors.toList();
-        List<ActorResponseDTO> listActorsDto = ConvertUtils.convertList(listActors, ActorResponseDTO.class);
+
         ListActorsResponseDTO listActorsResponseDTO = new ListActorsResponseDTO();
-        listActorsResponseDTO.setListActors(listActorsDto);
-        listActorsResponseDTO.setPageIndex(searchActorRequestDTO.getPageIndex());
-        listActorsResponseDTO.setPageSize(searchActorRequestDTO.getPageSize());
+        listActorsResponseDTO.setListActors(listActors);
         listActorsResponseDTO.setTotalRecords(pageActors.getTotalElements());
         return listActorsResponseDTO;
     }

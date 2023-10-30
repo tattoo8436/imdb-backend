@@ -1,5 +1,6 @@
 package com.example.demoimdb.dto.director;
 
+import com.example.demoimdb.dto.AccountAdmin;
 import com.example.demoimdb.dto.GetListByPageDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,12 +15,8 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 public class SearchDirectorRequestDTO extends GetListByPageDTO {
-    @NotNull(message = "Tên đăng nhập là bắt buộc!")
-    @NotBlank(message = "Tên đăng nhập không được để trống!")
-    private String username;
-    @NotNull(message = "Mật khẩu là bắt buộc!")
-    @NotBlank(message = "Mật khẩu không được để trống!")
-    private String password;
+    @NotNull(message = "Tài khoản admin là bắt buộc")
+    private AccountAdmin accountAdmin;
     private String sortBy;
     private String orderBy;
     private String name;

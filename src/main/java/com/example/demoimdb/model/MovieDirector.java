@@ -7,23 +7,21 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.security.auth.Subject;
 
 @Entity
-@Table(name = "episode_actor")
+@Table(name = "movie_director")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class EpisodeActor {
+public class MovieDirector {
     @ManyToOne
-    @JoinColumn(name = "actor_id")
-    @JsonIgnore
-    private Actor actor;
+    @JoinColumn(name = "director_id")
+    private Director director;
     @ManyToOne
-    @JoinColumn(name = "episode_id")
+    @JoinColumn(name = "movie_id")
     @JsonIgnore
-    private Episode episode;
+    private Movie movie;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

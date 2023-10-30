@@ -2,7 +2,6 @@ package com.example.demoimdb.service;
 
 import com.example.demoimdb.dto.account.BaseAccountDTO;
 import com.example.demoimdb.dto.director.DirectorRequestDTO;
-import com.example.demoimdb.dto.director.DirectorResponseDTO;
 import com.example.demoimdb.dto.director.ListDirectorsResponseDTO;
 import com.example.demoimdb.dto.director.SearchDirectorRequestDTO;
 import com.example.demoimdb.exception.ApiInputException;
@@ -26,19 +25,18 @@ public class DirectorService {
     @Autowired
     private AccountService accountService;
 
-    public DirectorResponseDTO addDirector(DirectorRequestDTO directorRequestDTO) throws IOException {
-        BaseAccountDTO baseAccountDTO = new BaseAccountDTO(directorRequestDTO.getUsername(), directorRequestDTO.getPassword());
+    public Director addDirector(DirectorRequestDTO directorRequestDTO) {
+        BaseAccountDTO baseAccountDTO = new BaseAccountDTO(directorRequestDTO.getAccountAdmin().getUsername(),
+                directorRequestDTO.getAccountAdmin().getPassword());
         accountService.checkAdmin(baseAccountDTO);
-        Director director = new Director();
-        director.setName(directorRequestDTO.getName());
-        director.setDescription(directorRequestDTO.getDescription());
-        director.setImage(directorRequestDTO.getImage());
-        director.setDob(directorRequestDTO.getDob());
-        return ConvertUtils.convert(directorRepository.save(director), DirectorResponseDTO.class);
+        Director director = new Director(null, directorRequestDTO.getName(), directorRequestDTO.getDescription(),
+                directorRequestDTO.getImage(), directorRequestDTO.getDob(), null);
+        return directorRepository.save(director);
     }
 
-    public DirectorResponseDTO editDirector(DirectorRequestDTO directorRequestDTO) throws IOException {
-        BaseAccountDTO baseAccountDTO = new BaseAccountDTO(directorRequestDTO.getUsername(), directorRequestDTO.getPassword());
+    public Director editDirector(DirectorRequestDTO directorRequestDTO) {
+        BaseAccountDTO baseAccountDTO = new BaseAccountDTO(directorRequestDTO.getAccountAdmin().getUsername(),
+                directorRequestDTO.getAccountAdmin().getPassword());
         accountService.checkAdmin(baseAccountDTO);
         try {
             Director director = directorRepository.findById(directorRequestDTO.getId()).get();
@@ -46,14 +44,15 @@ public class DirectorService {
             director.setDescription(directorRequestDTO.getDescription());
             director.setImage(directorRequestDTO.getImage());
             director.setDob(directorRequestDTO.getDob());
-            return ConvertUtils.convert(directorRepository.save(director), DirectorResponseDTO.class);
+            return directorRepository.save(director);
         } catch (Exception e) {
-            throw new ApiInputException("ID không hợp lệ!");
+            throw new ApiInputException("Sửa thất bại!");
         }
     }
 
     public String deleteDirector(DirectorRequestDTO directorRequestDTO) {
-        BaseAccountDTO baseAccountDTO = new BaseAccountDTO(directorRequestDTO.getUsername(), directorRequestDTO.getPassword());
+        BaseAccountDTO baseAccountDTO = new BaseAccountDTO(directorRequestDTO.getAccountAdmin().getUsername(),
+                directorRequestDTO.getAccountAdmin().getPassword());
         accountService.checkAdmin(baseAccountDTO);
         try {
             directorRepository.deleteById(directorRequestDTO.getId());
@@ -64,7 +63,8 @@ public class DirectorService {
     }
 
     public ListDirectorsResponseDTO searchDirector(SearchDirectorRequestDTO searchDirectorRequestDTO) {
-        BaseAccountDTO baseAccountDTO = new BaseAccountDTO(searchDirectorRequestDTO.getUsername(), searchDirectorRequestDTO.getPassword());
+        BaseAccountDTO baseAccountDTO = new BaseAccountDTO(searchDirectorRequestDTO.getAccountAdmin().getUsername(),
+                searchDirectorRequestDTO.getAccountAdmin().getPassword());
         accountService.checkAdmin(baseAccountDTO);
         searchDirectorRequestDTO.validateInput();
         Pageable pageable;
@@ -75,11 +75,9 @@ public class DirectorService {
         }
         Page<Director> pageDirectors = directorRepository.searchDirector(searchDirectorRequestDTO.getName(), pageable);
         List<Director> listDirectors = pageDirectors.toList();
-        List<DirectorResponseDTO> listDirectorsDto = ConvertUtils.convertList(listDirectors, DirectorResponseDTO.class);
+
         ListDirectorsResponseDTO listDirectorsResponseDTO = new ListDirectorsResponseDTO();
-        listDirectorsResponseDTO.setListDirectors(listDirectorsDto);
-        listDirectorsResponseDTO.setPageIndex(searchDirectorRequestDTO.getPageIndex());
-        listDirectorsResponseDTO.setPageSize(searchDirectorRequestDTO.getPageSize());
+        listDirectorsResponseDTO.setListDirectors(listDirectors);
         listDirectorsResponseDTO.setTotalRecords(pageDirectors.getTotalElements());
         return listDirectorsResponseDTO;
     }

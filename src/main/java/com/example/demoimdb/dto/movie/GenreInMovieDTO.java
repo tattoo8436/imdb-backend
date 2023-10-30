@@ -1,4 +1,4 @@
-package com.example.demoimdb.dto.director;
+package com.example.demoimdb.dto.movie;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +9,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class DirectorResponseDTO extends BaseDirectorDTO {
-    private Long id;
+public class GenreInMovieDTO {
+    private Long genreId;
+    private String genreName;
 }

@@ -21,6 +21,7 @@ public class SearchMovieRequestDTO extends GetListByPageDTO {
     private Long actorId;
     private Integer type;
     private Integer score;
+    private String releaseDate;
     private String language;
 
     @Override

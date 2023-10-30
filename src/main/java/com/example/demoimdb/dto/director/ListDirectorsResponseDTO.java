@@ -1,6 +1,7 @@
 package com.example.demoimdb.dto.director;
 
 import com.example.demoimdb.dto.GetListByPageDTO;
+import com.example.demoimdb.model.Director;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-public class ListDirectorsResponseDTO extends GetListByPageDTO {
+public class ListDirectorsResponseDTO {
     private Long totalRecords;
-    private List<DirectorResponseDTO> listDirectors;
+    private List<Director> listDirectors;
 }
