@@ -66,8 +66,6 @@ public class GenreService {
     }
 
     public ListGenresResponseDTO searchGenre(SearchGenreRequestDTO searchGenreRequestDTO) {
-        BaseAccountDTO baseAccountDTO = new BaseAccountDTO(searchGenreRequestDTO.getAccountAdmin().getUsername(),
-                searchGenreRequestDTO.getAccountAdmin().getPassword());
         searchGenreRequestDTO.validateInput();
         Pageable pageable;
         if ("ASC".equals(searchGenreRequestDTO.getOrderBy())) {

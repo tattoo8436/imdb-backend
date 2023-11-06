@@ -26,6 +26,15 @@ public class AccountService {
         }
     }
 
+    public void checkUser(BaseAccountDTO baseAccountDTO){
+        Account account = accountRepository.findByUsername(baseAccountDTO.getUsername());
+        if (account == null) {
+            throw new ApiInputException("Tài khoản không có quyền!");
+        } else if (!account.getPassword().equals(baseAccountDTO.getPassword())) {
+            throw new ApiInputException("Tài khoản không có quyền!");
+        }
+    }
+
     public String register(AccountRegisterRequestDTO accountRegisterRequestDTO) {
         if (accountRepository.existsByUsername(accountRegisterRequestDTO.getUsername())) {
             throw new ApiInputException("Tên đăng nhập đã tồn tại!");

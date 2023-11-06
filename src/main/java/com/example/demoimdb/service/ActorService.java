@@ -6,7 +6,9 @@ import com.example.demoimdb.dto.actor.ListActorsResponseDTO;
 import com.example.demoimdb.dto.actor.SearchActorRequestDTO;
 import com.example.demoimdb.exception.ApiInputException;
 import com.example.demoimdb.model.Actor;
+import com.example.demoimdb.model.Movie;
 import com.example.demoimdb.repository.ActorRepository;
+import com.example.demoimdb.repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,6 +24,8 @@ public class ActorService {
     private ActorRepository actorRepository;
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private MovieRepository movieRepository;
 
     public Actor addActor(ActorRequestDTO actorRequestDTO) {
         BaseAccountDTO baseAccountDTO = new BaseAccountDTO(actorRequestDTO.getAccountAdmin().getUsername(), actorRequestDTO.getAccountAdmin().getPassword());
@@ -58,9 +62,6 @@ public class ActorService {
     }
 
     public ListActorsResponseDTO searchActor(SearchActorRequestDTO searchActorRequestDTO) {
-        BaseAccountDTO baseAccountDTO = new BaseAccountDTO(searchActorRequestDTO.getAccountAdmin().getUsername(),
-                searchActorRequestDTO.getAccountAdmin().getPassword());
-        accountService.checkAdmin(baseAccountDTO);
         searchActorRequestDTO.validateInput();
         Pageable pageable;
         if ("ASC".equals(searchActorRequestDTO.getOrderBy())) {
@@ -75,6 +76,14 @@ public class ActorService {
         listActorsResponseDTO.setListActors(listActors);
         listActorsResponseDTO.setTotalRecords(pageActors.getTotalElements());
         return listActorsResponseDTO;
+    }
+
+    public Actor getActorById(Long id){
+        return actorRepository.findById(id).get();
+    }
+
+    public List<Movie> getListMoviesByActor(Long actorId){
+        return movieRepository.getListMoviesByActor(actorId);
     }
 
 }

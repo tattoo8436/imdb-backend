@@ -23,7 +23,6 @@ public class Comment {
     private Episode episode;
     @ManyToOne
     @JoinColumn(name = "account_id")
-    @JsonIgnore
     private Account account;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,5 +1,6 @@
 package com.example.demoimdb.repository;
 
+import com.example.demoimdb.model.Actor;
 import com.example.demoimdb.model.Movie;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,5 +23,10 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     Page<Movie> searchMovie(@Param("genreId") Long genreId, @Param("name") String name, @Param("type") Integer type,
                             @Param("score") Integer score, @Param("releaseDate") String releaseDate,
                             @Param("language") String language, Pageable pageable);
-    
+
+    @Query("select distinct m from Movie m join m.listMovieActors ma join ma.actor a where a.id = :actorId")
+    List<Movie> getListMoviesByActor(@Param("actorId") Long actorId);
+
+    @Query("select distinct m from Movie m join m.listMovieDirectors md join md.director d where d.id = :directorId")
+    List<Movie> getListMoviesByDirector(@Param("directorId") Long directorId);
 }

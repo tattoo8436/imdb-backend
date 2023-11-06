@@ -5,8 +5,11 @@ import com.example.demoimdb.dto.director.DirectorRequestDTO;
 import com.example.demoimdb.dto.director.ListDirectorsResponseDTO;
 import com.example.demoimdb.dto.director.SearchDirectorRequestDTO;
 import com.example.demoimdb.exception.ApiInputException;
+import com.example.demoimdb.model.Actor;
 import com.example.demoimdb.model.Director;
+import com.example.demoimdb.model.Movie;
 import com.example.demoimdb.repository.DirectorRepository;
+import com.example.demoimdb.repository.MovieRepository;
 import com.example.demoimdb.utils.ConvertUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,6 +27,8 @@ public class DirectorService {
     private DirectorRepository directorRepository;
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private MovieRepository movieRepository;
 
     public Director addDirector(DirectorRequestDTO directorRequestDTO) {
         BaseAccountDTO baseAccountDTO = new BaseAccountDTO(directorRequestDTO.getAccountAdmin().getUsername(),
@@ -63,9 +68,6 @@ public class DirectorService {
     }
 
     public ListDirectorsResponseDTO searchDirector(SearchDirectorRequestDTO searchDirectorRequestDTO) {
-        BaseAccountDTO baseAccountDTO = new BaseAccountDTO(searchDirectorRequestDTO.getAccountAdmin().getUsername(),
-                searchDirectorRequestDTO.getAccountAdmin().getPassword());
-        accountService.checkAdmin(baseAccountDTO);
         searchDirectorRequestDTO.validateInput();
         Pageable pageable;
         if ("ASC".equals(searchDirectorRequestDTO.getOrderBy())) {
@@ -80,6 +82,14 @@ public class DirectorService {
         listDirectorsResponseDTO.setListDirectors(listDirectors);
         listDirectorsResponseDTO.setTotalRecords(pageDirectors.getTotalElements());
         return listDirectorsResponseDTO;
+    }
+
+    public Director getDirectorById(Long id){
+        return directorRepository.findById(id).get();
+    }
+
+    public List<Movie> getListMoviesByDirector(Long directorId){
+        return movieRepository.getListMoviesByDirector(directorId);
     }
 
 }

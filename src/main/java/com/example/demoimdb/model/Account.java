@@ -1,5 +1,6 @@
 package com.example.demoimdb.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -23,8 +24,10 @@ public class Account {
     private String email;
     @Column(name = "role")
     private String role;
+    @JsonIgnore
     @OneToMany(mappedBy = "account")
     private List<Comment> listComments;
+    @JsonIgnore
     @OneToMany(mappedBy = "account")
     private List<Rating> listRatings;
 }
