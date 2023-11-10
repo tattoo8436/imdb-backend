@@ -2,17 +2,13 @@ package com.example.demoimdb.service;
 
 import com.example.demoimdb.dto.account.BaseAccountDTO;
 import com.example.demoimdb.dto.episode.EpisodeRequestDTO;
-import com.example.demoimdb.dto.movie.ListMoviesResponseDTO;
-import com.example.demoimdb.dto.movie.MovieRequestDTO;
-import com.example.demoimdb.dto.movie.SearchMovieRequestDTO;
 import com.example.demoimdb.exception.ApiInputException;
 import com.example.demoimdb.model.*;
-import com.example.demoimdb.repository.*;
+import com.example.demoimdb.repository.CommentRepository;
+import com.example.demoimdb.repository.EpisodeRepository;
+import com.example.demoimdb.repository.MovieRepository;
+import com.example.demoimdb.repository.RatingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,6 +21,14 @@ public class EpisodeService {
     private EpisodeRepository episodeRepository;
     @Autowired
     private MovieRepository movieRepository;
+    @Autowired
+    private CommentRepository commentRepository;
+    @Autowired
+    private RatingRepository ratingRepository;
+
+    public Episode getEpisodeById(Long id){
+        return episodeRepository.findById(id).get();
+    }
 
     public Episode addEpisode(EpisodeRequestDTO episodeRequestDTO) {
         BaseAccountDTO baseAccountDTO = new BaseAccountDTO(episodeRequestDTO.getAccountAdmin().getUsername(),
@@ -42,7 +46,7 @@ public class EpisodeService {
             Episode episode = new Episode(movie, null, totalEpisode + 1, episodeRequestDTO.getSeason(),
                     episodeRequestDTO.getName(), episodeRequestDTO.getDescription(),
                     episodeRequestDTO.getImage(), episodeRequestDTO.getReleaseDate(), episodeRequestDTO.getDuration(),
-                    0, null, null, null);
+                    0, 0D, null, null);
             Episode episodeSaved = episodeRepository.save(episode);
             return episodeSaved;
         } catch (Exception e) {
@@ -72,11 +76,20 @@ public class EpisodeService {
         BaseAccountDTO baseAccountDTO = new BaseAccountDTO(episodeRequestDTO.getAccountAdmin().getUsername(),
                 episodeRequestDTO.getAccountAdmin().getPassword());
         accountService.checkAdmin(baseAccountDTO);
-        try{
+        try {
             Episode episode = episodeRepository.findById(episodeRequestDTO.getId()).get();
+
+            List<Comment> listComments = episode.getListComments();
+            for (int i = 0; i < listComments.size(); i++) {
+                commentRepository.deleteById(listComments.get(i).getId());
+            }
+            List<Rating> listRatings = episode.getListRatings();
+            for (int i = 0; i < listRatings.size(); i++) {
+                ratingRepository.deleteById(listRatings.get(i).getId());
+            }
             episodeRepository.deleteById(episodeRequestDTO.getId());
             return "Xoá thành công!";
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new ApiInputException("Xoá thất bại!");
         }
     }

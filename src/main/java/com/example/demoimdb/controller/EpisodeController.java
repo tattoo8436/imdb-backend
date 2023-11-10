@@ -15,6 +15,11 @@ public class EpisodeController {
     @Autowired
     private EpisodeService episodeService;
 
+    @GetMapping("")
+    public  ResponseEntity<Episode> getEpisodeById(@RequestParam Long id){
+        return ResponseEntity.ok(episodeService.getEpisodeById(id));
+    }
+
     @PostMapping("")
     public ResponseEntity<Episode> addEpisode(@Valid @RequestBody EpisodeRequestDTO episodeRequestDTO) {
         return ResponseEntity.ok(episodeService.addEpisode(episodeRequestDTO));
@@ -25,8 +30,8 @@ public class EpisodeController {
         return ResponseEntity.ok(episodeService.editEpisode(episodeRequestDTO));
     }
 
-//    @DeleteMapping("")
-//    public ResponseEntity<String> deleteEpisode(@Valid @RequestBody EpisodeRequestDTO episodeRequestDTO) {
-//        return ResponseEntity.ok(episodeService.deleteEpisode(episodeRequestDTO));
-//    }
+    @DeleteMapping("")
+    public ResponseEntity<String> deleteEpisode(@Valid @RequestBody EpisodeRequestDTO episodeRequestDTO) {
+        return ResponseEntity.ok(episodeService.deleteEpisode(episodeRequestDTO));
+    }
 }

@@ -19,7 +19,6 @@ public class Rating {
     private Account account;
     @ManyToOne
     @JoinColumn(name = "movie_id")
-    @JsonIgnore
     private Movie movie;
     @ManyToOne
     @JoinColumn(name = "episode_id")

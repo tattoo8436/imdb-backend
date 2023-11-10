@@ -19,10 +19,11 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
             "and (:type is null or m.type = :type) " +
             "and (:score is null or m.score > :score) " +
             "and (:releaseDate is null or m.releaseDate >= :releaseDate) " +
-            "and (:language is null or m.language = :language)")
+            "and (:language is null or m.language = :language) " +
+            "and (:numberVote is null or m.numberVote >= :numberVote)")
     Page<Movie> searchMovie(@Param("genreId") Long genreId, @Param("name") String name, @Param("type") Integer type,
-                            @Param("score") Integer score, @Param("releaseDate") String releaseDate,
-                            @Param("language") String language, Pageable pageable);
+                            @Param("score") Double score, @Param("releaseDate") String releaseDate,
+                            @Param("language") String language, @Param("numberVote") Integer numberVote, Pageable pageable);
 
     @Query("select distinct m from Movie m join m.listMovieActors ma join ma.actor a where a.id = :actorId")
     List<Movie> getListMoviesByActor(@Param("actorId") Long actorId);

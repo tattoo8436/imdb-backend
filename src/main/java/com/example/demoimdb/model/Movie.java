@@ -31,8 +31,8 @@ public class Movie {
     private Integer duration;
     @Column(name = "type")
     private Integer type;
-    @Column(name = "ended")
-    private Boolean ended;
+    @Column(name = "endYear")
+    private Integer endYear;
     @Column(name = "number_season")
     private Integer numberSeason;
     @Column(name = "number_vote")
@@ -49,6 +49,7 @@ public class Movie {
     private List<MovieDirector> listMovieDirectors;
     @OneToMany(mappedBy = "movie")
     private List<Comment> listComments;
+    @JsonIgnore
     @OneToMany(mappedBy = "movie")
     private List<Rating> listRatings;
     @OneToMany(mappedBy = "movie")

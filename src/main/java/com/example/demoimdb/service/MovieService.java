@@ -15,7 +15,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class MovieService {
@@ -37,6 +41,10 @@ public class MovieService {
     private MovieDirectorRepository movieDirectorRepository;
     @Autowired
     private EpisodeRepository episodeRepository;
+    @Autowired
+    private RatingRepository ratingRepository;
+    @Autowired
+    private CommentRepository commentRepository;
 
     public ListMoviesResponseDTO searchMovie(SearchMovieRequestDTO searchMovieRequestDTO) {
         searchMovieRequestDTO.validateInput();
@@ -48,7 +56,7 @@ public class MovieService {
         }
         Page<Movie> pageMovie = movieRepository.searchMovie(searchMovieRequestDTO.getGenreId(), searchMovieRequestDTO.getName(),
                 searchMovieRequestDTO.getType(), searchMovieRequestDTO.getScore(), searchMovieRequestDTO.getReleaseDate(),
-                searchMovieRequestDTO.getLanguage(), pageable);
+                searchMovieRequestDTO.getLanguage(), searchMovieRequestDTO.getNumberVote(), pageable);
         List<Movie> listMovies = pageMovie.toList();
 
         ListMoviesResponseDTO listMoviesResponseDTO = new ListMoviesResponseDTO();
@@ -57,10 +65,10 @@ public class MovieService {
         return listMoviesResponseDTO;
     }
 
-    public Movie getMovieById(MovieRequestDTO movieRequestDTO){
-        try{
-            return movieRepository.findById(movieRequestDTO.getId()).get();
-        } catch (Exception e){
+    public Movie getMovieById(Long id) {
+        try {
+            return movieRepository.findById(id).get();
+        } catch (Exception e) {
             throw new ApiInputException("ID không đúng!");
         }
     }
@@ -71,7 +79,7 @@ public class MovieService {
         accountService.checkAdmin(baseAccountDTO);
         Movie movie = new Movie(null, movieRequestDTO.getName(), movieRequestDTO.getDescription(), movieRequestDTO.getImage(),
                 movieRequestDTO.getTrailer(), movieRequestDTO.getReleaseDate(), movieRequestDTO.getDuration(), movieRequestDTO.getType(),
-                false, null, 0, null, movieRequestDTO.getLanguage(),
+                null, null, 0, 0D, movieRequestDTO.getLanguage(),
                 null, null, null, null, null, null);
         if (movieRequestDTO.getType() == 2) {
             movie.setNumberSeason(1);
@@ -156,8 +164,16 @@ public class MovieService {
                 movieDirectorRepository.deleteById(listMovieDirectors.get(i).getId());
             }
             List<Episode> listEpisodes = movie.getListEpisodes();
-            for(int i = 0; i < listEpisodes.size(); i++){
+            for (int i = 0; i < listEpisodes.size(); i++) {
                 episodeRepository.deleteById(listEpisodes.get(i).getId());
+            }
+            List<Comment> listComments = movie.getListComments();
+            for (int i = 0; i < listComments.size(); i++) {
+                commentRepository.deleteById(listComments.get(i).getId());
+            }
+            List<Rating> listRatings = movie.getListRatings();
+            for (int i = 0; i < listRatings.size(); i++) {
+                ratingRepository.deleteById(listRatings.get(i).getId());
             }
             movieRepository.deleteById(movieRequestDTO.getId());
             return "Xoá thành công!";
@@ -166,15 +182,57 @@ public class MovieService {
         }
     }
 
-    public Integer addSeason(MovieRequestDTO movieRequestDTO){
+    public Integer addSeason(MovieRequestDTO movieRequestDTO) {
         try {
             Movie movie = movieRepository.findById(movieRequestDTO.getId()).get();
             Integer currentNumberSeason = movie.getNumberSeason();
             movie.setNumberSeason(currentNumberSeason + 1);
             movieRepository.save(movie);
             return currentNumberSeason + 1;
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new ApiInputException("Thêm mùa thất bại!");
         }
     }
+
+    public List<Long> getTrendingMovie() {
+        LocalDate currentDate = LocalDate.now();
+        LocalDate sevenDaysAgo = currentDate.minusDays(7);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String dateStr = sevenDaysAgo.format(formatter);
+
+        List<Rating> listRatings = ratingRepository.getRatingNew(dateStr);
+        List<Long> arr = new ArrayList<>();
+        for (Rating r : listRatings) {
+            if (r.getMovie() != null) {
+                arr.add(r.getMovie().getId());
+            }
+        }
+        return arr;
+    }
+
+    public List<Movie> getListMoviesSimilar(Long id){
+        try{
+            Movie movie = movieRepository.findById(id).get();
+            List<Movie> listMoviesSimilar = new ArrayList<>();
+            List<Movie> listAll = movieRepository.findAll();
+
+           for(int i = 0; i < listAll.size(); i++){
+               int count = 0;
+               for(MovieGenre mg : movie.getListMovieGenres()){
+                   for(int j = 0; j < Math.min(2, listAll.get(i).getListMovieGenres().size()); j++){
+                       if(mg.getGenre().getId().equals(listAll.get(i).getListMovieGenres().get(j).getGenre().getId())){
+                           count += 1;
+                       }
+                   }
+               }
+               if(count >= 2 && !movie.getId().equals(listAll.get(i).getId())){
+                   listMoviesSimilar.add(listAll.get(i));
+               }
+           }
+            return listMoviesSimilar;
+        } catch (Exception e){
+            return new ArrayList<>();
+        }
+    }
+
 }

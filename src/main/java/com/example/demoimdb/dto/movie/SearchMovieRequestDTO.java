@@ -20,7 +20,8 @@ public class SearchMovieRequestDTO extends GetListByPageDTO {
     private Long genreId;
     private Long actorId;
     private Integer type;
-    private Integer score;
+    private Double score;
+    private Integer numberVote;
     private String releaseDate;
     private String language;
 

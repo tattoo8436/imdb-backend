@@ -5,10 +5,7 @@ import com.example.demoimdb.model.Rating;
 import com.example.demoimdb.service.RatingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -23,8 +20,24 @@ public class RatingController {
         return ResponseEntity.ok(ratingService.addRatingMovie(ratingRequestDTO));
     }
 
+    @PostMapping("/episode")
+    public ResponseEntity<Rating> addRatingEpisode(@Valid @RequestBody RatingRequestDTO ratingRequestDTO) {
+        return ResponseEntity.ok(ratingService.addRatingEpisode(ratingRequestDTO));
+    }
+
     @PostMapping("/movie/get-by-account")
     public ResponseEntity<Rating> getRatingMovieByAccount(@RequestBody RatingRequestDTO ratingRequestDTO) {
         return ResponseEntity.ok(ratingService.getRatingMovieByAccount(ratingRequestDTO));
     }
+
+    @PostMapping("/episode/get-by-account")
+    public ResponseEntity<Rating> getRatingEpisodeByAccount(@RequestBody RatingRequestDTO ratingRequestDTO) {
+        return ResponseEntity.ok(ratingService.getRatingEpisodeByAccount(ratingRequestDTO));
+    }
+
+    @GetMapping("/movie/statistic")
+    public ResponseEntity<int[]> getStatisticMovie(@RequestParam Long movieId){
+        return ResponseEntity.ok(ratingService.getStatisticMovie(movieId));
+    }
+
 }
