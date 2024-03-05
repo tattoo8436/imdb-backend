@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { MovieSearch } from './dtos/MovieSearch.dto';
@@ -41,13 +41,21 @@ export class MoviesService {
       .leftJoinAndSelect('movie.movieDirectors', 'movieDirector')
       .leftJoinAndSelect('movieDirector.director', 'director')
       .where(
-        `(:name::text is null or lower(movie.name) ILIKE :name)
-         and (:type::integer is null or movie.type = :type)
-          and (:genreId::integer is null or genre.id = :genreId)`,
+        `(:name::text is null or lower(movie.name) ILIKE :name) 
+         and (:type::integer is null or movie.type = :type) 
+          and (:genreId::integer is null or genre.id = :genreId) 
+          and (:score::integer is null or movie.score > :score) 
+          and (:releaseDate::text is null or movie.releaseDate >= :releaseDate) 
+          and (:language::text is null or movie.language = :language) 
+          and (:numberVote::integer is null or movie.numberVote >= :numberVote)`,
         {
-          name: `%${search.name}%`,
-          type: search.type,
-          genreId: search.genreId,
+          name: search.name ? `%${search.name}%` : null,
+          type: search.type ?? null,
+          genreId: search.genreId ?? null,
+          score: search.score ?? null,
+          releaseDate: search.releaseDate ?? null,
+          language: search.language ?? null,
+          numberVote: search.numberVote ?? null,
         },
       )
       .skip((search.page - 1) * search.limit)
@@ -75,6 +83,24 @@ export class MoviesService {
     return { data, totals };
   }
 
+  async getMovieById(id: number) {
+    const queryBuilder = this.movieRepository.createQueryBuilder('movie');
+    queryBuilder
+      .distinct()
+      .leftJoinAndSelect('movie.movieGenres', 'movieGenre')
+      .leftJoinAndSelect('movieGenre.genre', 'genre')
+      .leftJoinAndSelect('movie.movieActors', 'movieActor')
+      .leftJoinAndSelect('movieActor.actor', 'actor')
+      .leftJoinAndSelect('movie.movieDirectors', 'movieDirector')
+      .leftJoinAndSelect('movieDirector.director', 'director')
+      .leftJoinAndSelect('movie.episodes', 'episodes')
+      .where(`movie.id = :id`, {
+        id: id,
+      });
+    const data = await queryBuilder.getOne();
+    return data;
+  }
+
   async createMovie(movieRequest: BaseMovie) {
     const movie: Movie = {
       ...movieRequest,
@@ -82,7 +108,7 @@ export class MoviesService {
       ended: false,
       numberSeason: movieRequest.type === 1 ? null : 1,
       numberVote: 0,
-      score: null,
+      score: 0,
       episodes: null,
       movieActors: null,
       movieDirectors: null,
@@ -182,6 +208,16 @@ export class MoviesService {
       return this.movieRepository.delete({ id });
     } catch (error) {
       throw new Error();
+    }
+  }
+
+  async addSeason(id: number) {
+    const movie = await this.movieRepository.findOneBy({ id });
+    if (movie) {
+      movie.numberSeason++;
+      return this.movieRepository.save(movie);
+    } else {
+      throw new BadRequestException();
     }
   }
 }

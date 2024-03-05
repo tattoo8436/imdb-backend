@@ -45,6 +45,7 @@ export class AccountsService {
     return {
       ...result,
       accessToken: this.jwtService.sign({
+        id: foundAccount.id,
         username: account.username,
         role: foundAccount.role,
       }),

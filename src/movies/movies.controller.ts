@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Param,
   ParseIntPipe,
   Post,
@@ -21,6 +22,11 @@ export class MoviesController {
     return this.movieService.searchMovies(search);
   }
 
+  @Get('/:id')
+  getMovieById(@Param('id', ParseIntPipe) id: number) {
+    return this.movieService.getMovieById(id);
+  }
+
   @Post('')
   createMovie(@Body() movie: BaseMovie) {
     return this.movieService.createMovie(movie);
@@ -34,5 +40,10 @@ export class MoviesController {
   @Delete('/:id')
   deleteMovie(@Param('id', ParseIntPipe) id: number) {
     return this.movieService.deleteMovie(id);
+  }
+
+  @Put('/add-season/:id')
+  addSeason(@Param('id', ParseIntPipe) id: number) {
+    return this.movieService.addSeason(id);
   }
 }

@@ -5,10 +5,9 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { MovieGenre } from './MovieGenre';
-import { Rating } from './Rating';
 import { Comment } from './Comment';
 import { Movie } from './Movie';
+import { Rating } from './Rating';
 
 @Entity({ name: 'episodes' })
 export class Episode {
@@ -39,7 +38,7 @@ export class Episode {
   @Column({ nullable: true })
   numberVote: number;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'float' })
   score: number;
 
   @ManyToOne(() => Movie, (movie) => movie.episodes, { onDelete: 'SET NULL' })

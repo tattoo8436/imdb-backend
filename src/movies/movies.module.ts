@@ -37,7 +37,10 @@ export class MoviesModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(AuthMiddleware)
-      .exclude({ path: 'api/movies/search', method: RequestMethod.POST })
+      .exclude(
+        { path: 'api/movies/search', method: RequestMethod.POST },
+        { path: 'api/movies/(.*)', method: RequestMethod.GET },
+      )
       .forRoutes(MoviesController);
   }
 }

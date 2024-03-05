@@ -17,7 +17,9 @@ export class Rating {
   @ManyToOne(() => Movie, (movie) => movie.ratings, { onDelete: 'SET NULL' })
   movie: Movie;
 
-  @ManyToOne(() => Episode, (episode) => episode.ratings)
+  @ManyToOne(() => Episode, (episode) => episode.ratings, {
+    onDelete: 'SET NULL',
+  })
   episode: Episode;
 
   @ManyToOne(() => Account, (account) => account.ratings)

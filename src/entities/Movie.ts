@@ -41,7 +41,7 @@ export class Movie {
   @Column({ nullable: true })
   numberVote: number;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'float' })
   score: number;
 
   @Column({ nullable: true })

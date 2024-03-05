@@ -22,6 +22,8 @@ import {
   MovieGenre,
   Rating,
 } from './entities';
+import { EpisodesModule } from './episodes/episodes.module';
+import { RatingsModule } from './ratings/ratings.module';
 
 @Module({
   imports: [
@@ -57,6 +59,8 @@ import {
     FilesModule,
     DirectorsModule,
     MoviesModule,
+    EpisodesModule,
+    RatingsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

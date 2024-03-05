@@ -19,7 +19,9 @@ export class Comment {
   })
   movie: Movie;
 
-  @ManyToOne(() => Episode, (episode) => episode.comments)
+  @ManyToOne(() => Episode, (episode) => episode.comments, {
+    onDelete: 'SET NULL',
+  })
   episode: Episode;
 
   @ManyToOne(() => Account, (account) => account.comments)
