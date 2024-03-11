@@ -9,7 +9,7 @@ export class Comment {
   id: number;
 
   @Column({ nullable: false })
-  content: number;
+  content: string;
 
   @Column({ nullable: false })
   date: string;

@@ -6,11 +6,13 @@ import { Repository } from 'typeorm';
 import { ActorSearch } from './dtos/ActorSearch';
 import { ActorUpdate } from './dtos/ActorUpdate';
 import { BaseActor } from './dtos/BaseActor';
+import { Movie } from 'src/entities';
 
 @Injectable()
 export class ActorsService {
   constructor(
     @InjectRepository(Actor) private actorRepository: Repository<Actor>,
+    @InjectRepository(Movie) private movieRepository: Repository<Movie>,
   ) {}
 
   async searchActors(searchRaw: ActorSearch) {
@@ -23,6 +25,23 @@ export class ActorsService {
       .orderBy(search.sortBy, search.orderBy);
     const [data, totals] = await queryBuilder.getManyAndCount();
     return { data, totals };
+  }
+
+  getActorById(id: number) {
+    return this.actorRepository.findOneBy({ id });
+  }
+
+  async getMoviesByActor(actorId: number) {
+    const queryBuilder = this.movieRepository.createQueryBuilder('movie');
+    queryBuilder
+      .distinct()
+      .leftJoinAndSelect('movie.movieActors', 'movieActors')
+      .leftJoinAndSelect('movieActors.actor', 'actor')
+      .where('actor.id = :actorId', {
+        actorId,
+      });
+    const movies = await queryBuilder.getMany();
+    return movies;
   }
 
   createActor(actor: BaseActor) {

@@ -12,6 +12,8 @@ import { Actor } from 'src/entities/Actor';
 import { MovieActor } from 'src/entities/MovieActor';
 import { Director } from 'src/entities/Director';
 import { MovieDirector } from 'src/entities/MovieDirector';
+import * as dayjs from 'dayjs';
+import { Rating } from 'src/entities';
 
 @Injectable()
 export class MoviesService {
@@ -27,6 +29,8 @@ export class MoviesService {
     private directorRepository: Repository<Director>,
     @InjectRepository(MovieDirector)
     private movieDirectorRepository: Repository<MovieDirector>,
+    @InjectRepository(Rating)
+    private ratingRepository: Repository<Rating>,
   ) {}
 
   async searchMovies(searchRaw: MovieSearch) {
@@ -94,9 +98,13 @@ export class MoviesService {
       .leftJoinAndSelect('movie.movieDirectors', 'movieDirector')
       .leftJoinAndSelect('movieDirector.director', 'director')
       .leftJoinAndSelect('movie.episodes', 'episodes')
+      .leftJoinAndSelect('movie.comments', 'comments')
+      .leftJoinAndSelect('comments.account', 'account')
       .where(`movie.id = :id`, {
         id: id,
-      });
+      })
+      .orderBy('episodes.ep', 'ASC')
+      .orderBy('comments.id', 'DESC');
     const data = await queryBuilder.getOne();
     return data;
   }
@@ -219,5 +227,59 @@ export class MoviesService {
     } else {
       throw new BadRequestException();
     }
+  }
+
+  async getTrendingMovie() {
+    const date = dayjs().subtract(1, 'month').format('YYYY-MM-DD');
+    const queryBuilder = this.ratingRepository.createQueryBuilder('rating');
+    queryBuilder
+      .distinct()
+      .leftJoinAndSelect('rating.movie', 'movie')
+      .where(`rating.date > :date`, {
+        date,
+      });
+    const ratings = await queryBuilder.getMany();
+    const arr = [];
+    ratings.map((i) => {
+      if (i.movie) {
+        arr.push(i.movie.id);
+      }
+    });
+    return arr;
+  }
+
+  async getMoviesSimilar(movieId: number) {
+    const queryBuilder = this.movieRepository.createQueryBuilder('movie');
+    queryBuilder
+      .distinct()
+      .leftJoinAndSelect('movie.movieGenres', 'movieGenres')
+      .leftJoinAndSelect('movieGenres.genre', 'genre')
+      .where(`movie.id = :id`, {
+        id: movieId,
+      });
+    const movie = await queryBuilder.getOne();
+    const arr = [];
+    const queryBuilder2 = this.movieRepository.createQueryBuilder('movie');
+    queryBuilder2
+      .distinct()
+      .leftJoinAndSelect('movie.movieGenres', 'movieGenres')
+      .leftJoinAndSelect('movieGenres.genre', 'genre');
+    const movies = await queryBuilder2.getMany();
+    // console.log(movies);
+
+    movies.map((i) => {
+      let count = 0;
+      movie.movieGenres.map((mg) => {
+        for (let k = 0; k < Math.min(2, i.movieGenres.length); k++) {
+          if (mg.genre.id === i.movieGenres[k].genre.id) {
+            count++;
+          }
+        }
+      });
+      if (count >= 2 && movie.id !== i.id) {
+        arr.push(i);
+      }
+    });
+    return arr;
   }
 }

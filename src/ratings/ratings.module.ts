@@ -1,4 +1,9 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { RatingsController } from './ratings.controller';
 import { RatingsService } from './ratings.service';
 import { Account, Episode, Movie, Rating } from 'src/entities';
@@ -12,6 +17,18 @@ import { AuthMiddleware } from 'src/middlewares/auth/auth.middleware';
 })
 export class RatingsModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).forRoutes(RatingsController);
+    consumer
+      .apply(AuthMiddleware)
+      .exclude(
+        {
+          path: `api/ratings/movie/get-by-account/(.*)`,
+          method: RequestMethod.GET,
+        },
+        {
+          path: `api/ratings/episode/get-by-account/(.*)`,
+          method: RequestMethod.GET,
+        },
+      )
+      .forRoutes(RatingsController);
   }
 }

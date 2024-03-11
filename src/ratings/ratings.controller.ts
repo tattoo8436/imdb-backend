@@ -24,20 +24,14 @@ export class RatingsController {
     return this.ratingService.createRatingEpisode(rating, req.account?.id);
   }
 
-  @Get('/movie/get-by-account/:id')
-  getRatingMovieByAccount(
-    @Param('id', ParseIntPipe) id: number,
-    @Req() req: any,
-  ) {
-    return this.ratingService.getRatingMovieByAccount(id, req.account?.id);
+  @Post('/movie/get-by-account')
+  getRatingMovieByAccount(@Body() payload: any) {
+    return this.ratingService.getRatingMovieByAccount(payload);
   }
 
-  @Get('/episode/get-by-account/:id')
-  getRatingEpisodeByAccount(
-    @Param('id', ParseIntPipe) id: number,
-    @Req() req: any,
-  ) {
-    return this.ratingService.getRatingEpisodeByAccount(id, req.account?.id);
+  @Post('/episode/get-by-account')
+  getRatingEpisodeByAccount(@Body() payload: any) {
+    return this.ratingService.getRatingEpisodeByAccount(payload);
   }
 
   @Get('/movie/statistic/:movieId')

@@ -24,6 +24,7 @@ import {
 } from './entities';
 import { EpisodesModule } from './episodes/episodes.module';
 import { RatingsModule } from './ratings/ratings.module';
+import { CommentsModule } from './comments/comments.module';
 
 @Module({
   imports: [
@@ -61,6 +62,7 @@ import { RatingsModule } from './ratings/ratings.module';
     MoviesModule,
     EpisodesModule,
     RatingsModule,
+    CommentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

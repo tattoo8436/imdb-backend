@@ -1,4 +1,13 @@
-import { Body, Controller, Delete, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { DirectorsService } from './directors.service';
 import { DirectorSearch } from './dtos/DirectorSearch';
 import { BaseDirector } from './dtos/BaseDirector';
@@ -11,6 +20,16 @@ export class DirectorsController {
   @Post('/search')
   searchDirector(@Body() search: DirectorSearch) {
     return this.directorService.searchDirectors(search);
+  }
+
+  @Get('/:id')
+  getActorById(@Param('id', ParseIntPipe) id: number) {
+    return this.directorService.getDirectorById(id);
+  }
+
+  @Get('/movie/:directorId')
+  getMoviesByDirector(@Param('directorId', ParseIntPipe) directorId: number) {
+    return this.directorService.getMoviesByDirector(directorId);
   }
 
   @Post('')

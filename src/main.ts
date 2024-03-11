@@ -21,7 +21,7 @@ async function bootstrap() {
   app.useWebSocketAdapter(new WsAdapter(app));
 
   app.useGlobalPipes(new ValidationPipe());
-  app.use(express.json({limit: '50mb'}));
+  app.use(express.json({ limit: '50mb' }));
 
   await app.listen(4000);
 }

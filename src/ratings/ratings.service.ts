@@ -14,37 +14,51 @@ export class RatingsService {
     @InjectRepository(Account) private accountRepository: Repository<Account>,
   ) {}
 
-  async getRatingMovieByAccount(movieId: number, accountId: number) {
+  async getRatingMovieByAccount(payload: any) {
     const queryBuilder = this.ratingRepository.createQueryBuilder('rating');
     queryBuilder
       .leftJoinAndSelect('rating.movie', 'movie')
       .leftJoinAndSelect('rating.account', 'account')
       .where(`movie.id = :movieId and account.id = :accountId`, {
-        movieId,
-        accountId,
+        movieId: payload.movieId,
+        accountId: payload.accountId,
       });
     const rating = await queryBuilder.getOne();
-    return rating;
+    const res = rating
+      ? {
+          score: rating.score,
+          date: rating.date,
+          id: rating.id,
+        }
+      : null;
+    return res;
   }
 
-  async getRatingEpisodeByAccount(episodeId: number, accountId: number) {
+  async getRatingEpisodeByAccount(payload: any) {
     const queryBuilder = this.ratingRepository.createQueryBuilder('rating');
     queryBuilder
       .leftJoinAndSelect('rating.episode', 'episode')
       .leftJoinAndSelect('rating.account', 'account')
       .where(`episode.id = :episodeId and account.id = :accountId`, {
-        episodeId,
-        accountId,
+        episodeId: payload.episodeId,
+        accountId: payload.accountId,
       });
     const rating = await queryBuilder.getOne();
-    return rating;
+    const res = rating
+      ? {
+          score: rating.score,
+          date: rating.date,
+          id: rating.id,
+        }
+      : null;
+    return res;
   }
 
   async createRatingMovie(ratingRequest: BaseRating, accountId: number) {
-    const rating = await this.getRatingMovieByAccount(
-      ratingRequest.movieId,
+    const rating = await this.getRatingMovieByAccount({
+      movieId: ratingRequest.movieId,
       accountId,
-    );
+    });
     let movieSaved = null;
     const movie = await this.movieRepository.findOneBy({
       id: ratingRequest.movieId,
@@ -84,10 +98,10 @@ export class RatingsService {
 
   async createRatingEpisode(ratingRequest: BaseRating, accountId: number) {
     let episodeSaved = null;
-    const rating = await this.getRatingEpisodeByAccount(
-      ratingRequest.episodeId,
+    const rating = await this.getRatingEpisodeByAccount({
+      episodeId: ratingRequest.episodeId,
       accountId,
-    );
+    });
     const episode = await this.episodeRepository.findOneBy({
       id: ratingRequest.episodeId,
     });

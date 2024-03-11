@@ -22,6 +22,16 @@ export class MoviesController {
     return this.movieService.searchMovies(search);
   }
 
+  @Get('/trending')
+  getTrendingMovie() {
+    return this.movieService.getTrendingMovie();
+  }
+
+  @Get('/similar/:id')
+  getSimilarMovie(@Param('id', ParseIntPipe) id: number) {
+    return this.movieService.getMoviesSimilar(id);
+  }
+
   @Get('/:id')
   getMovieById(@Param('id', ParseIntPipe) id: number) {
     return this.movieService.getMovieById(id);

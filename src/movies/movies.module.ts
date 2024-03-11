@@ -16,6 +16,7 @@ import {
   MovieActor,
   MovieDirector,
   MovieGenre,
+  Rating,
 } from 'src/entities';
 
 @Module({
@@ -28,6 +29,7 @@ import {
       MovieActor,
       Director,
       MovieDirector,
+      Rating,
     ]),
   ],
   controllers: [MoviesController],

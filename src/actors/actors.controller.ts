@@ -1,4 +1,13 @@
-import { Body, Controller, Delete, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ActorsService } from './actors.service';
 import { BaseActor } from './dtos/BaseActor';
@@ -15,6 +24,18 @@ export class ActorsController {
   @Post('/search')
   searchActor(@Body() search: ActorSearch) {
     return this.actorService.searchActors(search);
+  }
+
+  @ApiOperation({ summary: 'Get actor' })
+  @Get('/:id')
+  getActorById(@Param('id', ParseIntPipe) id: number) {
+    return this.actorService.getActorById(id);
+  }
+
+  @ApiOperation({ summary: 'Get movies by actor' })
+  @Get('/movie/:actorId')
+  getMoviesByActor(@Param('actorId', ParseIntPipe) actorId: number) {
+    return this.actorService.getMoviesByActor(actorId);
   }
 
   @ApiOperation({ summary: 'Create actor' })

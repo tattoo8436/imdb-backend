@@ -12,8 +12,17 @@ export class EpisodesService {
     @InjectRepository(Movie) private movieRepository: Repository<Movie>,
   ) {}
 
-  getEpisodeById(id: number) {
-    return this.episodeRepository.findOneBy({ id });
+  async getEpisodeById(id: number) {
+    const queryBuilder = this.episodeRepository.createQueryBuilder('episode');
+    queryBuilder
+      .distinct()
+      .leftJoinAndSelect('episode.comments', 'comments')
+      .leftJoinAndSelect('comments.account', 'account')
+      .where(`episode.id = :id`, {
+        id: id,
+      });
+    const data = await queryBuilder.getOne();
+    return data;
   }
 
   async createEpisode(episode: EpisodeCreate) {
