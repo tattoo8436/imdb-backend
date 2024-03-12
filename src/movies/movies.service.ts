@@ -68,7 +68,7 @@ export class MoviesService {
     const [dataRaw, totals] = await queryBuilder.getManyAndCount();
 
     const data = [];
-    for (let i = 0; i < totals; i++) {
+    for (let i = 0; i < dataRaw.length; i++) {
       const queryBuilder2 = this.movieRepository.createQueryBuilder('movie');
       queryBuilder2
         .distinct()
@@ -230,7 +230,7 @@ export class MoviesService {
   }
 
   async getTrendingMovie() {
-    const date = dayjs().subtract(1, 'month').format('YYYY-MM-DD');
+    const date = dayjs().subtract(1, 'year').format('YYYY-MM-DD');
     const queryBuilder = this.ratingRepository.createQueryBuilder('rating');
     queryBuilder
       .distinct()
